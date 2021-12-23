@@ -48,10 +48,16 @@ class Cliente:
         print("\n********** Banco Cripto $$$ $$$ $$$ **********")
 
         sql = "select * from usuarios_banco where rut = %s and clave =%s" #consulta sql para buscar usuario
+
         usuario = input("Ingrese el rut para iniciar sesion de usuario: ")
         clave = input("Ingrese su clave  para iniciar sesion de usuario: ")
+
+        #cifrar contraseña
+        cifrado = hashlib.sha256()
+        cifrado.update(clave.encode('utf-8'))
+
         self.rut = usuario #tomar registro
-        values=(usuario,clave)
+        values=(usuario,cifrado.hexdigest())
         #resultado = usuario in self.usuarios
 
         cursor.execute(sql,values)
