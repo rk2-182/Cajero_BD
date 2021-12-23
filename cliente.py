@@ -2,6 +2,7 @@ from conexion import conectar
 from time import sleep
 import os
 from datetime import datetime
+import hashlib
 
 
 conexion = conectar()
@@ -12,7 +13,6 @@ cursor = conexion[1]
 class Cliente:
 
     #Constructor
-
     def __init__(self):
         self.nombre = ""
         self.rut = ""
@@ -20,26 +20,7 @@ class Cliente:
         self.busqueda = 0
         self.fecha = datetime.today().strftime('%Y-%m-%d %H:%M')
 
-    #Metodos
-    """
-        sql = "insert into Usuario (email,username,edad) values (%s,%s,%s)"
-
-        print("\n********Registro Usuario**********")
-        email = input('Ingrese su email: ')
-        username = input('Ingree su username: ')
-        age =  int(input('Ingrese su edad: '))
-        values =(email,username,age)
-
-        cursor.execute(sql,values)
-
-        database.commit()
-        #print(cursor.rowcount)
-        if cursor.rowcount == 1:
-            print("Registro ingresado exitosamente")
-        else:
-            print("Ocurrio un error al ingresar")
-    """
-
+    #====================Metodos===============================
     def registro_usuario(self):
         sql = "insert into usuarios_banco (monto_total,rut,nombre,clave)values (%s,%s,%s,%s);"
         print("\n********Registro Usuario**********")
@@ -47,7 +28,13 @@ class Cliente:
         rut = input('Ingrese su rut: ')
         nombre = input('Ingree su nombre: : ')
         clave =  input('Ingrese su clave: ')
-        values =(monto,rut,nombre,clave)
+
+        #cifrar contraseña
+        cifrado = hashlib.sha256()
+        cifrado.update(clave.encode('utf-8'))
+
+
+        values =(monto,rut,nombre,cifrado.hexdigest())
 
         cursor.execute(sql,values)
 
@@ -57,7 +44,6 @@ class Cliente:
             print("Registro ingresado exitosamente")
         else:
             print("Ocurrio un error al ingresar")
-
 
 
     def iniciar_sesion(self):
@@ -92,7 +78,6 @@ class Cliente:
         print("********** Banco Cripto $$$ $$$ $$$ **********")
         print("")
         
-        #sql = "insert into usuarios_banco (monto_total,rut) values (%s)"
         sql = "update usuarios_banco set monto_total = monto_total + %s where rut=%s;"
 
         rut = self.rut #asignar rut de la session 
