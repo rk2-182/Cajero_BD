@@ -33,26 +33,25 @@ class Cliente:
         cifrado = hashlib.sha256()
         cifrado.update(clave.encode('utf-8'))
 
-
         values =(monto,rut,nombre,cifrado.hexdigest())
 
-        cursor.execute(sql,values)
-
-        bd.commit()
-        #print(cursor.rowcount)
-        if cursor.rowcount == 1:
-            print("Registro ingresado exitosamente")
-        else:
-            print("Ocurrio un error al ingresar")
-
+        try:
+            
+            cursor.execute(sql,values)
+            bd.commit()
+            if cursor.rowcount == 1:
+                print("Registro ingresado exitosamente")
+        except:
+            print("Ocurrio un error a registrar, posiblemente el usuario ya existe.")
 
     def iniciar_sesion(self):
         print("\n********** Banco Cripto $$$ $$$ $$$ **********")
 
-        sql = "select * from usuarios_banco where rut = %s" #consulta sql para buscar usuario
+        sql = "select * from usuarios_banco where rut = %s and clave =%s" #consulta sql para buscar usuario
         usuario = input("Ingrese el rut para iniciar sesion de usuario: ")
+        clave = input("Ingrese su clave  para iniciar sesion de usuario: ")
         self.rut = usuario #tomar registro
-        values=(usuario,)
+        values=(usuario,clave)
         #resultado = usuario in self.usuarios
 
         cursor.execute(sql,values)
@@ -69,6 +68,7 @@ class Cliente:
             return self.rut
             
         else:
+            print(registro)
             print("No encontrado")
             busqueda = cursor.rowcount
             #return busqueda
@@ -105,13 +105,6 @@ class Cliente:
 
 #******************************************************************
 
-#Crear obejto
-cliente = Cliente()
-
-cliente.registro_usuario()
-cliente.iniciar_sesion()
-
-#cliente.ingresar_dinero()
 
 
 
