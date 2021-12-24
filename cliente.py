@@ -3,7 +3,8 @@ from time import sleep
 import os
 from datetime import datetime
 import hashlib
-
+import pyfiglet
+titulo = pyfiglet.figlet_format(" BANCO CRIPTO ")
 
 conexion = conectar()
 
@@ -45,7 +46,7 @@ class Cliente:
             print("Ocurrio un error a registrar, posiblemente el usuario ya existe.")
 
     def iniciar_sesion(self):
-        print("\n********** Banco Cripto $$$ $$$ $$$ **********")
+        print(titulo)
 
         sql = "select * from usuarios_banco where rut = %s and clave =%s" #consulta sql para buscar usuario
 
@@ -70,7 +71,7 @@ class Cliente:
             busqueda = cursor.rowcount
             self.busqueda = busqueda
             #return busqueda
-            print(self.rut)
+            #print(self.rut)
             return self.rut
             
         else:
